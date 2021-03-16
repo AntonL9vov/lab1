@@ -72,9 +72,9 @@ Matrix *multipleMatrix(Matrix *mat1, Matrix *mat2){
     void *m1, *m2, *res;
     for (int i = 0; i < mat1->length; ++i) {
         for (int j = 0; j < mat2->height; ++j){
-            for (int k = 0, l = 0; k < mat1->height; ++k, ++l) {
-                m1 = (void *)(mat1->matrix+((k*mat1->length)+i)*mat1->element_size);
-                m2 = (void *)(mat2->matrix+((j*mat2->length)+l)*mat2->element_size);
+            for (int k = 0; k < mat1->height; ++k) {
+                m1 = (void *)(mat1->matrix+((i*mat1->length)+k)*mat1->element_size);
+                m2 = (void *)(mat2->matrix+((k*mat2->length)+j)*mat2->element_size);
                 res = (void *)(mult->matrix+((i*mult->length)+j)*mult->element_size);
                 mat1->functions->mult(m1, m2, res);
             }
@@ -119,5 +119,12 @@ Matrix *scalarMatrix(Matrix *mat1){
         }
     }
     return scalar;
+}
+
+void deleteMatrix(Matrix *m){
+    for (int i = 0; i < m->height; ++i) {
+        for (int j = 0; j < m->length; ++j) free((m->matrix+((i*m->length)+j)*m->element_size));
+    }
+    free(m);
 }
 
